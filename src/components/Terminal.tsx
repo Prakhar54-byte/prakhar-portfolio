@@ -7,8 +7,15 @@ interface HistoryItem {
   isError?: boolean;
 }
 
+interface FileSystemNode {
+  type: 'file' | 'directory';
+  content?: string[] | (() => string[]);
+  children?: Record<string, FileSystemNode>;
+}
+
 const Terminal = () => {
   const [input, setInput] = useState('');
+  const [currentPath, setCurrentPath] = useState<string[]>(['~']);
   const [history, setHistory] = useState<HistoryItem[]>([
     {
       command: '',
@@ -26,300 +33,302 @@ const Terminal = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
 
-  const commands: Record<string, () => string[]> = {
-    help: () => [
-      '┌─────────────────────────────────────────────────────────────┐',
-      '│  Available Commands:                                        │',
-      '├─────────────────────────────────────────────────────────────┤',
-      '│  about      - Display information about me                  │',
-      '│  skills     - List my technical skills                      │',
-      '│  projects   - Show my projects                              │',
-      '│  education  - View my education details                     │',
-      '│  experience - View my work experience                       │',
-      '│  contact    - Get my contact information                    │',
-      '│  stats      - Show competitive programming stats            │',
-      '│  social     - Display social media links                    │',
-      '│  resume     - Download my resume                            │',
-      '│  clear      - Clear the terminal                            │',
-      '│  date       - Show current date and time                    │',
-      '│  whoami     - Display current user                          │',
-      '│  pwd        - Print working directory                       │',
-      '│  ls         - List directory contents                       │',
-      '│  cat        - View file contents (try: cat about.txt)       │',
-      '│  neofetch   - Display system info                           │',
-      '│  matrix     - Toggle matrix rain effect                     │',
-      '│  history    - Show command history                          │',
-      '│  echo       - Echo a message                                │',
-      '│  sudo       - Try it :)                                     │',
-      '└─────────────────────────────────────────────────────────────┘'
-    ],
-
-    about: () => [
-      '',
-      '  ██████╗ ██████╗  █████╗ ██╗  ██╗██╗  ██╗ █████╗ ██████╗ ',
-      '  ██╔══██╗██╔══██╗██╔══██╗██║ ██╔╝██║  ██║██╔══██╗██╔══██╗',
-      '  ██████╔╝██████╔╝███████║█████╔╝ ███████║███████║██████╔╝',
-      '  ██╔═══╝ ██╔══██╗██╔══██║██╔═██╗ ██╔══██║██╔══██║██╔══██╗',
-      '  ██║     ██║  ██║██║  ██║██║  ██╗██║  ██║██║  ██║██║  ██║',
-      '  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝',
-      '',
-      '  👋 Hey! I\'m Prakhar Chauhan',
-      '  🎓 B.Tech in Biological Sciences & Bioengineering @ IIT Jodhpur',
-      '  📚 Minor in Artificial Intelligence & Data Science',
-      '  💻 Full Stack Developer | ML Enthusiast | Problem Solver',
-      '  🚀 Building production-ready applications since 2023',
-      '  📍 IIT Jodhpur, Rajasthan, India',
-      ''
-    ],
-
-    skills: () => [
-      '',
-      '  ╭──────────────────────────────────────────────────────────╮',
-      '  │                    TECHNICAL SKILLS                      │',
-      '  ╰──────────────────────────────────────────────────────────╯',
-      '',
-      '  💻 Languages:',
-      '     ├── C/C++      ████████████████████ 95%',
-      '     ├── Python     ███████████████████░ 90%',
-      '     ├── JavaScript ██████████████████░░ 85%',
-      '     ├── TypeScript █████████████████░░░ 80%',
-      '     └── Java       ███████████████░░░░░ 70%',
-      '',
-      '  🌐 Frontend:',
-      '     ├── React.js   ███████████████████░ 90%',
-      '     ├── Next.js    █████████████████░░░ 80%',
-      '     ├── TailwindCSS████████████████████ 95%',
-      '     └── HTML/CSS   ████████████████████ 95%',
-      '',
-      '  ⚙️  Backend:',
-      '     ├── Node.js    ██████████████████░░ 85%',
-      '     ├── Django     █████████████████░░░ 80%',
-      '     ├── FastAPI    ██████████████████░░ 85%',
-      '     └── Express.js █████████████████░░░ 80%',
-      '',
-      '  🗄️  Databases:',
-      '     ├── PostgreSQL ██████████████████░░ 85%',
-      '     ├── MongoDB    █████████████████░░░ 80%',
-      '     └── Redis      ██████████████░░░░░░ 65%',
-      '',
-      '  🛠️  Tools & DevOps:',
-      '     ├── Git/GitHub ████████████████████ 95%',
-      '     ├── Docker     █████████████████░░░ 80%',
-      '     ├── Linux      ██████████████████░░ 85%',
-      '     └── AWS        ██████████████░░░░░░ 65%',
-      ''
-    ],
-
-    projects: () => [
-      '',
-      '  ╭──────────────────────────────────────────────────────────╮',
-      '  │                      MY PROJECTS                         │',
-      '  ╰──────────────────────────────────────────────────────────╯',
-      '',
-      '  🎬 SPARK - Video Streaming Platform',
-      '     ├── Tech: Node.js, React, PostgreSQL, Redis',
-      '     ├── Features: Adaptive streaming, real-time transcoding',
-      '     └── GitHub: github.com/Prakhar54-byte/spark',
-      '',
-      '  🤝 CSR CONNECT - NGO-Corporate Matching Platform',
-      '     ├── Tech: Django, PostgreSQL, React',
-      '     ├── Features: AI-powered matching, real-time analytics',
-      '     └── Status: Production (500+ users)',
-      '',
-      '  📺 STREAMIFY - Video Streaming Pipeline',
-      '     ├── Tech: Node.js, FFmpeg, HLS Protocol',
-      '     ├── Features: Adaptive bitrate, HLS streaming',
-      '     └── GitHub: github.com/Prakhar54-byte/streamify',
-      '',
-      '  🤖 MLOps PIPELINE - End-to-End ML System',
-      '     ├── Tech: Python, Docker, FastAPI, PostgreSQL',
-      '     ├── Features: Automated training, model versioning',
-      '     └── GitHub: github.com/Prakhar54-byte/mlops-pipeline',
-      '',
-      '  🏠 HOUSE PRICE PREDICTION',
-      '     ├── Tech: Python, Scikit-learn, Pandas',
-      '     ├── Features: Feature engineering, model optimization',
-      '     └── Accuracy: 92%+',
-      '',
-      '  🖼️  IMAGE PROCESSING IN C',
-      '     ├── Tech: Pure C, File I/O',
-      '     ├── Features: Filters, edge detection, histogram',
-      '     └── GitHub: github.com/Prakhar54-byte/image-processing',
-      ''
-    ],
-
-    education: () => [
-      '',
-      '  ╭──────────────────────────────────────────────────────────╮',
-      '  │                      EDUCATION                           │',
-      '  ╰──────────────────────────────────────────────────────────╯',
-      '',
-      '  🎓 Indian Institute of Technology, Jodhpur',
-      '     ├── Degree: B.Tech in BSBE',
-      '     ├── Minor: Artificial Intelligence & Data Science',
-      '     ├── Duration: 2023 - 2027 (Expected)',
-      '     ├── CGPA: 7.52 / 10',
-      '     └── Roll No: B23BB1032',
-      '',
-      '  📚 Relevant Coursework:',
-      '     ├── Data Structures & Algorithms',
-      '     ├── Machine Learning & Deep Learning',
-      '     ├── Database Management Systems',
-      '     ├── Operating Systems',
-      '     ├── Computer Networks',
-      '     └── Software Engineering',
-      ''
-    ],
-
-    experience: () => [
-      '',
-      '  ╭──────────────────────────────────────────────────────────╮',
-      '  │                    WORK EXPERIENCE                       │',
-      '  ╰──────────────────────────────────────────────────────────╯',
-      '',
-      '  💼 Backend Developer - CSR Connect',
-      '     ├── Duration: Jan 2025 - Mar 2025',
-      '     ├── Tech: Django, PostgreSQL, REST APIs',
-      '     ├── Built scalable APIs handling 10,000+ requests/day',
-      '     └── Implemented authentication & authorization systems',
-      '',
-      '  🏥 Clinical Data Analyst - IIT Jodhpur & AIIMS',
-      '     ├── Duration: Aug 2024 - Dec 2024',
-      '     ├── Tech: Python, Pandas, Statistical Analysis',
-      '     ├── Analyzed clinical data for research projects',
-      '     └── Developed automated data processing pipelines',
-      '',
-      '  📋 Department Secretary - BSBE, IIT Jodhpur',
-      '     ├── Duration: 2024 - Present',
-      '     ├── Managing department activities & events',
-      '     └── Coordinating between students and faculty',
-      ''
-    ],
-
-    contact: () => [
-      '',
-      '  ╭──────────────────────────────────────────────────────────╮',
-      '  │                    CONTACT INFO                          │',
-      '  ╰──────────────────────────────────────────────────────────╯',
-      '',
-      '  📧 Email:    prakharchauhan179@gmail.com',
-      '  📱 Phone:    +91-8369512080',
-      '  📍 Location: IIT Jodhpur, Rajasthan, India',
-      '',
-      '  💡 Feel free to reach out for collaborations!',
-      ''
-    ],
-
-    social: () => [
-      '',
-      '  ╭──────────────────────────────────────────────────────────╮',
-      '  │                    SOCIAL LINKS                          │',
-      '  ╰──────────────────────────────────────────────────────────╯',
-      '',
-      '  🐙 GitHub:   github.com/Prakhar54-byte',
-      '  💼 LinkedIn: linkedin.com/in/prakhar-chauhan-9a32b52b4',
-      '  🏆 Codeforces: codeforces.com/profile/prakhar_54',
-      '  💻 LeetCode: leetcode.com/prakhar54',
-      ''
-    ],
-
-    stats: () => [
-      '',
-      '  ╔════════════════════════════════════════════════════════════╗',
-      '  ║           COMPETITIVE PROGRAMMING STATS                    ║',
-      '  ╠════════════════════════════════════════════════════════════╣',
-      '  ║                                                            ║',
-      '  ║   🏆 Codeforces                                            ║',
-      '  ║      ├── Rating: 1609 (Expert)                             ║',
-      '  ║      ├── Max Rating: 1609                                  ║',
-      '  ║      └── Contests: 50+                                     ║',
-      '  ║                                                            ║',
-      '  ║   💻 LeetCode                                              ║',
-      '  ║      ├── Rating: 1735                                      ║',
-      '  ║      ├── Problems Solved: 480+                             ║',
-      '  ║      └── Streak: 100+ days                                 ║',
-      '  ║                                                            ║',
-      '  ║   📊 Overall Stats                                         ║',
-      '  ║      ├── Total Problems: 600+                              ║',
-      '  ║      ├── Contests Participated: 80+                        ║',
-      '  ║      └── Languages: C++, Python, Java                      ║',
-      '  ║                                                            ║',
-      '  ╚════════════════════════════════════════════════════════════╝',
-      ''
-    ],
-
-    neofetch: () => [
-      '',
-      '  prakhar@portfolio',
-      '  -----------------',
-      '  OS: Portfolio OS 2.0',
-      '  Host: IIT Jodhpur',
-      '  Kernel: React 18.x',
-      '  Uptime: Since 2023',
-      '  Packages: 50+ (npm)',
-      '  Shell: zsh 5.9',
-      '  Terminal: hyper',
-      '  CPU: AMD Ryzen 7 (Brain Power)',
-      '  Memory: Infinite (Learning Mode)',
-      '',
-      '  ████████████████████████',
-      '  ████████████████████████',
-      ''
-    ],
-
-    whoami: () => ['  prakhar@portfolio'],
-
-    pwd: () => ['  /home/prakhar/portfolio'],
-
-    date: () => ['  ' + new Date().toString()],
-
-    ls: () => [
-      '  drwxr-xr-x  about.txt',
-      '  drwxr-xr-x  skills/',
-      '  drwxr-xr-x  projects/',
-      '  drwxr-xr-x  education.md',
-      '  drwxr-xr-x  experience.json',
-      '  drwxr-xr-x  contact.txt',
-      '  -rw-r--r--  resume.pdf',
-      '  -rw-r--r--  README.md'
-    ],
-
-    resume: () => {
-      // Trigger download (you can replace with actual resume link)
-      window.open('https://github.com/Prakhar54-byte', '_blank');
-      return ['  📄 Opening resume... (redirecting to GitHub)'];
-    },
-
-    matrix: () => {
-      const matrixEl = document.querySelector('canvas');
-      if (matrixEl) {
-        matrixEl.style.opacity = matrixEl.style.opacity === '0' ? '1' : '0';
-        return ['  🎬 Matrix rain effect toggled!'];
+  // Virtual File System
+  const fileSystem: FileSystemNode = {
+    type: 'directory',
+    children: {
+      'about.txt': {
+        type: 'file',
+        content: () => [
+          '',
+          '  ██████╗ ██████╗  █████╗ ██╗  ██╗██╗  ██╗ █████╗ ██████╗ ',
+          '  ██╔══██╗██╔══██╗██╔══██╗██║ ██╔╝██║  ██║██╔══██╗██╔══██╗',
+          '  ██████╔╝██████╔╝███████║█████╔╝ ███████║███████║██████╔╝',
+          '  ██╔═══╝ ██╔══██╗██╔══██║██╔═██╗ ██╔══██║██╔══██║██╔══██╗',
+          '  ██║     ██║  ██║██║  ██║██║  ██╗██║  ██║██║  ██║██║  ██║',
+          '  ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝',
+          '',
+          '  👋 Hey! I\'m Prakhar Chauhan',
+          '  🎓 B.Tech in Biological Sciences & Bioengineering @ IIT Jodhpur',
+          '  📚 Minor in Artificial Intelligence & Data Science',
+          '  💻 Full Stack Developer | ML Enthusiast | Problem Solver',
+          '  🚀 Building production-ready applications since 2023',
+          '  📍 IIT Jodhpur, Rajasthan, India',
+          ''
+        ]
+      },
+      'contact.txt': {
+        type: 'file',
+        content: [
+          '',
+          '  📧 Email:    prakharchauhan179@gmail.com',
+          '  📱 Phone:    +91-8369512080',
+          '  📍 Location: IIT Jodhpur, Rajasthan, India',
+          '  🐙 GitHub:   github.com/Prakhar54-byte',
+          '  💼 LinkedIn: linkedin.com/in/prakhar-chauhan-9a32b52b4',
+          ''
+        ]
+      },
+      'education.md': {
+        type: 'file',
+        content: [
+          '',
+          '  # Education',
+          '',
+          '  🎓 Indian Institute of Technology, Jodhpur',
+          '     - Degree: B.Tech in BSBE',
+          '     - Minor: AI & Data Science',
+          '     - Duration: 2023 - 2027',
+          '     - CGPA: 7.52 / 10',
+          ''
+        ]
+      },
+      'experience.json': {
+        type: 'file',
+        content: [
+          '',
+          '  {',
+          '    "experience": [',
+          '      {',
+          '        "role": "Backend Developer",',
+          '        "company": "CSR Connect",',
+          '        "duration": "Jan 2025 - Mar 2025"',
+          '      },',
+          '      {',
+          '        "role": "Clinical Data Analyst",',
+          '        "company": "IIT Jodhpur & AIIMS",',
+          '        "duration": "Aug 2024 - Dec 2024"',
+          '      }',
+          '    ]',
+          '  }',
+          ''
+        ]
+      },
+      'resume.pdf': {
+        type: 'file',
+        content: ['  [Binary file - use "open resume.pdf" to view]']
+      },
+      'README.md': {
+        type: 'file',
+        content: [
+          '',
+          '  # Prakhar\'s Portfolio',
+          '  Welcome to my interactive terminal portfolio!',
+          '  Type "help" for available commands.',
+          ''
+        ]
+      },
+      'skills': {
+        type: 'directory',
+        children: {
+          'languages.txt': {
+            type: 'file',
+            content: [
+              '',
+              '  💻 Programming Languages:',
+              '     ├── C/C++      ████████████████████ 95%',
+              '     ├── Python     ███████████████████░ 90%',
+              '     ├── JavaScript ██████████████████░░ 85%',
+              '     ├── TypeScript █████████████████░░░ 80%',
+              '     └── Java       ███████████████░░░░░ 70%',
+              ''
+            ]
+          },
+          'frontend.txt': {
+            type: 'file',
+            content: [
+              '',
+              '  🌐 Frontend Technologies:',
+              '     ├── React.js   ███████████████████░ 90%',
+              '     ├── Next.js    █████████████████░░░ 80%',
+              '     ├── TailwindCSS████████████████████ 95%',
+              '     └── HTML/CSS   ████████████████████ 95%',
+              ''
+            ]
+          },
+          'backend.txt': {
+            type: 'file',
+            content: [
+              '',
+              '  ⚙️  Backend Technologies:',
+              '     ├── Node.js    ██████████████████░░ 85%',
+              '     ├── Django     █████████████████░░░ 80%',
+              '     ├── FastAPI    ██████████████████░░ 85%',
+              '     └── Express.js █████████████████░░░ 80%',
+              ''
+            ]
+          },
+          'databases.txt': {
+            type: 'file',
+            content: [
+              '',
+              '  🗄️  Databases:',
+              '     ├── PostgreSQL ██████████████████░░ 85%',
+              '     ├── MongoDB    █████████████████░░░ 80%',
+              '     └── Redis      ██████████████░░░░░░ 65%',
+              ''
+            ]
+          },
+          'tools.txt': {
+            type: 'file',
+            content: [
+              '',
+              '  🛠️  Tools & DevOps:',
+              '     ├── Git/GitHub ████████████████████ 95%',
+              '     ├── Docker     █████████████████░░░ 80%',
+              '     ├── Linux      ██████████████████░░ 85%',
+              '     └── AWS        ██████████████░░░░░░ 65%',
+              ''
+            ]
+          }
+        }
+      },
+      'projects': {
+        type: 'directory',
+        children: {
+          'spark.md': {
+            type: 'file',
+            content: [
+              '',
+              '  🎬 SPARK - Video Streaming Platform',
+              '  ════════════════════════════════════',
+              '  Tech: Node.js, React, PostgreSQL, Redis',
+              '  Features: Adaptive streaming, real-time transcoding',
+              '  GitHub: github.com/Prakhar54-byte/spark',
+              ''
+            ]
+          },
+          'csr-connect.md': {
+            type: 'file',
+            content: [
+              '',
+              '  🤝 CSR CONNECT',
+              '  ════════════════════════════════════',
+              '  NGO-Corporate Matching Platform',
+              '  Tech: Django, PostgreSQL, React',
+              '  Status: Production (500+ users)',
+              ''
+            ]
+          },
+          'streamify.md': {
+            type: 'file',
+            content: [
+              '',
+              '  📺 STREAMIFY - Video Streaming Pipeline',
+              '  ════════════════════════════════════',
+              '  Tech: Node.js, FFmpeg, HLS Protocol',
+              '  Features: Adaptive bitrate streaming',
+              ''
+            ]
+          },
+          'mlops.md': {
+            type: 'file',
+            content: [
+              '',
+              '  🤖 MLOps PIPELINE',
+              '  ════════════════════════════════════',
+              '  End-to-End ML System',
+              '  Tech: Python, Docker, FastAPI',
+              '  Features: Automated training, versioning',
+              ''
+            ]
+          }
+        }
       }
-      return ['  Matrix rain element not found'];
-    },
-
-    history: () => {
-      if (commandHistory.length === 0) {
-        return ['  No commands in history'];
-      }
-      return commandHistory.map((cmd, i) => `  ${i + 1}  ${cmd}`);
-    },
-
-    sudo: () => [
-      '  ⚠️  [sudo] password for prakhar: ',
-      '  Nice try! But you don\'t have root access here 😄',
-      '  Just kidding, feel free to explore with regular commands!'
-    ],
-
-    clear: () => []
+    }
   };
 
+  // Navigate to path and return the node
+  const getNodeAtPath = (path: string[]): FileSystemNode | null => {
+    let current = fileSystem;
+    for (const segment of path) {
+      if (segment === '~' || segment === '') continue;
+      if (current.type !== 'directory' || !current.children?.[segment]) {
+        return null;
+      }
+      current = current.children[segment];
+    }
+    return current;
+  };
+
+  // Get display path
+  const getDisplayPath = (): string => {
+    if (currentPath.length === 1 && currentPath[0] === '~') {
+      return '~';
+    }
+    return currentPath.join('/').replace('~/', '~/');
+  };
+
+  // Process commands
   const processCommand = (cmd: string): HistoryItem => {
-    const trimmedCmd = cmd.trim().toLowerCase();
-    const parts = trimmedCmd.split(' ');
-    const mainCommand = parts[0];
+    const trimmedCmd = cmd.trim();
+    const parts = trimmedCmd.split(/\s+/);
+    const mainCommand = parts[0].toLowerCase();
     const args = parts.slice(1);
+
+    // Handle 'ls' command
+    if (mainCommand === 'ls') {
+      const targetPath = args[0] ? resolvePath(args[0]) : currentPath;
+      const node = getNodeAtPath(targetPath);
+      
+      if (!node) {
+        return { command: cmd, output: [`  ls: cannot access '${args[0]}': No such file or directory`], isError: true };
+      }
+      
+      if (node.type === 'file') {
+        return { command: cmd, output: [`  ${args[0] || targetPath[targetPath.length - 1]}`] };
+      }
+      
+      const items = Object.entries(node.children || {}).map(([name, child]) => {
+        const isDir = child.type === 'directory';
+        return `  ${isDir ? 'drwxr-xr-x' : '-rw-r--r--'}  ${name}${isDir ? '/' : ''}`;
+      });
+      
+      return { command: cmd, output: items.length > 0 ? items : ['  (empty directory)'] };
+    }
+
+    // Handle 'cd' command
+    if (mainCommand === 'cd') {
+      const target = args[0] || '~';
+      
+      if (target === '~' || target === '') {
+        setCurrentPath(['~']);
+        return { command: cmd, output: [] };
+      }
+      
+      if (target === '..') {
+        if (currentPath.length > 1) {
+          setCurrentPath(prev => prev.slice(0, -1));
+        }
+        return { command: cmd, output: [] };
+      }
+      
+      if (target === '.') {
+        return { command: cmd, output: [] };
+      }
+      
+      const newPath = resolvePath(target);
+      const node = getNodeAtPath(newPath);
+      
+      if (!node) {
+        return { command: cmd, output: [`  cd: ${target}: No such file or directory`], isError: true };
+      }
+      
+      if (node.type !== 'directory') {
+        return { command: cmd, output: [`  cd: ${target}: Not a directory`], isError: true };
+      }
+      
+      setCurrentPath(newPath);
+      return { command: cmd, output: [] };
+    }
+
+    // Handle 'pwd' command
+    if (mainCommand === 'pwd') {
+      const fullPath = currentPath[0] === '~' 
+        ? '/home/prakhar/portfolio' + (currentPath.length > 1 ? '/' + currentPath.slice(1).join('/') : '')
+        : '/' + currentPath.join('/');
+      return { command: cmd, output: [`  ${fullPath}`] };
+    }
 
     // Handle 'cat' command
     if (mainCommand === 'cat') {
@@ -327,26 +336,195 @@ const Terminal = () => {
       if (!file) {
         return { command: cmd, output: ['  Usage: cat <filename>'], isError: true };
       }
-      const fileCommands: Record<string, () => string[]> = {
-        'about.txt': commands.about,
-        'contact.txt': commands.contact,
-        'readme.md': () => ['  # Prakhar\'s Portfolio', '  Welcome to my terminal portfolio!', '  Type "help" for commands.'],
-        'education.md': commands.education
-      };
-      if (fileCommands[file]) {
-        return { command: cmd, output: fileCommands[file]() };
+      
+      const filePath = resolvePath(file);
+      const node = getNodeAtPath(filePath);
+      
+      if (!node) {
+        return { command: cmd, output: [`  cat: ${file}: No such file or directory`], isError: true };
       }
-      return { command: cmd, output: [`  cat: ${file}: No such file or directory`], isError: true };
+      
+      if (node.type === 'directory') {
+        return { command: cmd, output: [`  cat: ${file}: Is a directory`], isError: true };
+      }
+      
+      const content = typeof node.content === 'function' ? node.content() : node.content || [];
+      return { command: cmd, output: content };
+    }
+
+    // Handle 'help' command
+    if (mainCommand === 'help') {
+      return {
+        command: cmd,
+        output: [
+          '┌─────────────────────────────────────────────────────────────┐',
+          '│  Available Commands:                                        │',
+          '├─────────────────────────────────────────────────────────────┤',
+          '│  ls [dir]   - List directory contents                       │',
+          '│  cd <dir>   - Change directory (try: cd skills)             │',
+          '│  pwd        - Print working directory                       │',
+          '│  cat <file> - View file contents                            │',
+          '│  tree       - Show directory tree                           │',
+          '│  about      - Display info about me                         │',
+          '│  skills     - Show my technical skills                      │',
+          '│  projects   - Show my projects                              │',
+          '│  contact    - Get contact information                       │',
+          '│  stats      - Competitive programming stats                 │',
+          '│  neofetch   - Display system info                           │',
+          '│  whoami     - Display current user                          │',
+          '│  date       - Show current date/time                        │',
+          '│  echo <msg> - Echo a message                                │',
+          '│  clear      - Clear the terminal                            │',
+          '│  history    - Show command history                          │',
+          '│  matrix     - Toggle matrix rain effect                     │',
+          '└─────────────────────────────────────────────────────────────┘'
+        ]
+      };
+    }
+
+    // Handle 'tree' command
+    if (mainCommand === 'tree') {
+      const node = getNodeAtPath(currentPath);
+      if (!node || node.type !== 'directory') {
+        return { command: cmd, output: ['  Error reading directory'], isError: true };
+      }
+      
+      const lines: string[] = ['  ' + getDisplayPath()];
+      const buildTree = (n: FileSystemNode, prefix: string) => {
+        if (n.type !== 'directory' || !n.children) return;
+        const entries = Object.entries(n.children);
+        entries.forEach(([name, child], index) => {
+          const isLast = index === entries.length - 1;
+          const connector = isLast ? '└── ' : '├── ';
+          lines.push(`  ${prefix}${connector}${name}${child.type === 'directory' ? '/' : ''}`);
+          if (child.type === 'directory') {
+            buildTree(child, prefix + (isLast ? '    ' : '│   '));
+          }
+        });
+      };
+      buildTree(node, '');
+      return { command: cmd, output: lines };
+    }
+
+    // Handle 'about' shortcut
+    if (mainCommand === 'about') {
+      const aboutNode = fileSystem.children?.['about.txt'];
+      if (aboutNode && aboutNode.content) {
+        const content = typeof aboutNode.content === 'function' ? aboutNode.content() : aboutNode.content;
+        return { command: cmd, output: content };
+      }
+    }
+
+    // Handle 'skills' shortcut
+    if (mainCommand === 'skills') {
+      return {
+        command: cmd,
+        output: [
+          '',
+          '  ╭──────────────────────────────────────────────────────────╮',
+          '  │                    TECHNICAL SKILLS                      │',
+          '  ╰──────────────────────────────────────────────────────────╯',
+          '',
+          '  💡 Use "cd skills" then "ls" to explore skill categories!',
+          '  💡 Or try "cat skills/languages.txt"',
+          '',
+          '  Quick Overview:',
+          '  ├── languages.txt   (C++, Python, JS, TS, Java)',
+          '  ├── frontend.txt    (React, Next.js, Tailwind)',
+          '  ├── backend.txt     (Node, Django, FastAPI)',
+          '  ├── databases.txt   (PostgreSQL, MongoDB, Redis)',
+          '  └── tools.txt       (Git, Docker, Linux, AWS)',
+          ''
+        ]
+      };
+    }
+
+    // Handle 'projects' shortcut
+    if (mainCommand === 'projects') {
+      return {
+        command: cmd,
+        output: [
+          '',
+          '  ╭──────────────────────────────────────────────────────────╮',
+          '  │                      MY PROJECTS                         │',
+          '  ╰──────────────────────────────────────────────────────────╯',
+          '',
+          '  💡 Use "cd projects" then "ls" to see all projects!',
+          '  💡 Or try "cat projects/spark.md"',
+          '',
+          '  Featured Projects:',
+          '  ├── spark.md        🎬 Video Streaming Platform',
+          '  ├── csr-connect.md  🤝 NGO-Corporate Matching',
+          '  ├── streamify.md    📺 Video Streaming Pipeline',
+          '  └── mlops.md        🤖 End-to-End ML System',
+          ''
+        ]
+      };
+    }
+
+    // Handle 'contact' shortcut
+    if (mainCommand === 'contact') {
+      const contactNode = fileSystem.children?.['contact.txt'];
+      if (contactNode && contactNode.content) {
+        const content = typeof contactNode.content === 'function' ? contactNode.content() : contactNode.content;
+        return { command: cmd, output: content };
+      }
+    }
+
+    // Handle 'stats' command
+    if (mainCommand === 'stats') {
+      return {
+        command: cmd,
+        output: [
+          '',
+          '  ╔════════════════════════════════════════════════════════════╗',
+          '  ║           COMPETITIVE PROGRAMMING STATS                    ║',
+          '  ╠════════════════════════════════════════════════════════════╣',
+          '  ║   🏆 Codeforces: 1609 (Expert)                             ║',
+          '  ║   💻 LeetCode: 1735 | 480+ problems                        ║',
+          '  ║   🔥 Streak: 100+ days                                     ║',
+          '  ║   📊 Total Problems: 600+                                  ║',
+          '  ╚════════════════════════════════════════════════════════════╝',
+          ''
+        ]
+      };
+    }
+
+    // Handle 'neofetch' command
+    if (mainCommand === 'neofetch') {
+      return {
+        command: cmd,
+        output: [
+          '',
+          '  prakhar@portfolio',
+          '  -----------------',
+          '  OS: Portfolio OS 2.0',
+          '  Host: IIT Jodhpur',
+          '  Kernel: React 18.x',
+          '  Shell: zsh 5.9',
+          '  Terminal: hyper',
+          '  CPU: Brain Power ∞',
+          '  Memory: Learning Mode',
+          '',
+          '  ████████████████████████',
+          ''
+        ]
+      };
+    }
+
+    // Handle 'whoami' command
+    if (mainCommand === 'whoami') {
+      return { command: cmd, output: ['  prakhar'] };
+    }
+
+    // Handle 'date' command
+    if (mainCommand === 'date') {
+      return { command: cmd, output: ['  ' + new Date().toString()] };
     }
 
     // Handle 'echo' command
     if (mainCommand === 'echo') {
       return { command: cmd, output: ['  ' + args.join(' ')] };
-    }
-
-    // Handle 'cd' command
-    if (mainCommand === 'cd') {
-      return { command: cmd, output: ['  Changed directory (not really, this is a web terminal 😄)'] };
     }
 
     // Handle 'clear' command
@@ -355,9 +533,43 @@ const Terminal = () => {
       return { command: cmd, output: [] };
     }
 
-    // Handle regular commands
-    if (commands[mainCommand]) {
-      return { command: cmd, output: commands[mainCommand]() };
+    // Handle 'history' command
+    if (mainCommand === 'history') {
+      if (commandHistory.length === 0) {
+        return { command: cmd, output: ['  No commands in history'] };
+      }
+      return { command: cmd, output: commandHistory.map((c, i) => `  ${i + 1}  ${c}`) };
+    }
+
+    // Handle 'matrix' command
+    if (mainCommand === 'matrix') {
+      const matrixEl = document.querySelector('canvas');
+      if (matrixEl) {
+        const el = matrixEl as HTMLElement;
+        el.style.opacity = el.style.opacity === '0' ? '1' : '0';
+        return { command: cmd, output: ['  🎬 Matrix rain effect toggled!'] };
+      }
+      return { command: cmd, output: ['  Matrix rain element not found'] };
+    }
+
+    // Handle 'open' command
+    if (mainCommand === 'open') {
+      if (args[0] === 'resume.pdf') {
+        window.open('https://github.com/Prakhar54-byte', '_blank');
+        return { command: cmd, output: ['  📄 Opening resume...'] };
+      }
+      return { command: cmd, output: [`  Cannot open: ${args[0] || 'no file specified'}`], isError: true };
+    }
+
+    // Handle 'sudo' command
+    if (mainCommand === 'sudo') {
+      return {
+        command: cmd,
+        output: [
+          '  ⚠️  [sudo] password for prakhar: ',
+          '  Nice try! But you don\'t have root access here 😄'
+        ]
+      };
     }
 
     // Command not found
@@ -366,6 +578,27 @@ const Terminal = () => {
       output: [`  Command not found: ${mainCommand}`, '  Type "help" to see available commands.'],
       isError: true
     };
+  };
+
+  // Resolve relative path to absolute path array
+  const resolvePath = (target: string): string[] => {
+    if (target.startsWith('~')) {
+      return ['~', ...target.slice(2).split('/').filter(Boolean)];
+    }
+    if (target.startsWith('/')) {
+      return ['~', ...target.slice(1).split('/').filter(Boolean)];
+    }
+    // Relative path
+    const newPath = [...currentPath];
+    const segments = target.split('/').filter(Boolean);
+    for (const seg of segments) {
+      if (seg === '..') {
+        if (newPath.length > 1) newPath.pop();
+      } else if (seg !== '.') {
+        newPath.push(seg);
+      }
+    }
+    return newPath;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -403,12 +636,26 @@ const Terminal = () => {
       }
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      // Auto-complete
-      const availableCommands = Object.keys(commands);
+      // Auto-complete files and directories in current path
+      const node = getNodeAtPath(currentPath);
+      if (node?.type === 'directory' && node.children) {
+        const fileMatches = Object.keys(node.children).filter(name => 
+          name.toLowerCase().startsWith(input.split(' ').pop()?.toLowerCase() || '')
+        );
+        const cmdParts = input.split(' ');
+        if (fileMatches.length === 1 && cmdParts.length > 1) {
+          cmdParts[cmdParts.length - 1] = fileMatches[0];
+          setInput(cmdParts.join(' '));
+        } else if (fileMatches.length > 1 && cmdParts.length > 1) {
+          setHistory(prev => [...prev, { command: '', output: ['  ' + fileMatches.join('  ')] }]);
+        }
+      }
+      // Auto-complete commands
+      const availableCommands = ['ls', 'cd', 'pwd', 'cat', 'tree', 'about', 'skills', 'projects', 'contact', 'stats', 'neofetch', 'whoami', 'date', 'echo', 'clear', 'history', 'matrix', 'open', 'help'];
       const matches = availableCommands.filter(cmd => cmd.startsWith(input.toLowerCase()));
-      if (matches.length === 1) {
+      if (matches.length === 1 && !input.includes(' ')) {
         setInput(matches[0]);
-      } else if (matches.length > 1) {
+      } else if (matches.length > 1 && !input.includes(' ')) {
         setHistory(prev => [...prev, { command: '', output: ['  ' + matches.join('  ')] }]);
       }
     }
@@ -448,7 +695,7 @@ const Terminal = () => {
             <div className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 transition-colors"></div>
             <div className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 transition-colors"></div>
             <div className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 transition-colors"></div>
-            <span className="ml-4 text-gray-400 text-sm">prakhar@portfolio:~</span>
+            <span className="ml-4 text-gray-400 text-sm">prakhar@portfolio:{getDisplayPath()}</span>
           </div>
 
           {/* Terminal Body */}
@@ -459,12 +706,12 @@ const Terminal = () => {
             {history.map((item, index) => (
               <div key={index} className="mb-2">
                 {item.command && (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-purple-400">prakhar</span>
                     <span className="text-gray-500">@</span>
                     <span className="text-cyan-400">portfolio</span>
-                    <span className="text-gray-500">:~$</span>
-                    <span className="text-white ml-2">{item.command}</span>
+                    <span className="text-gray-500">:{getDisplayPath()}$</span>
+                    <span className="text-white ml-1">{item.command}</span>
                   </div>
                 )}
                 {item.output.map((line, lineIndex) => (
@@ -479,18 +726,18 @@ const Terminal = () => {
             ))}
             
             {/* Input Line */}
-            <form onSubmit={handleSubmit} className="flex items-center gap-2">
+            <form onSubmit={handleSubmit} className="flex items-center gap-2 flex-wrap">
               <span className="text-purple-400">prakhar</span>
               <span className="text-gray-500">@</span>
               <span className="text-cyan-400">portfolio</span>
-              <span className="text-gray-500">:~$</span>
+              <span className="text-gray-500">:{getDisplayPath()}$</span>
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent text-white outline-none ml-2 caret-green-400"
+                className="flex-1 bg-transparent text-white outline-none ml-1 caret-green-400 min-w-[100px]"
                 autoFocus
                 spellCheck={false}
                 autoComplete="off"
@@ -500,7 +747,7 @@ const Terminal = () => {
         </motion.div>
         
         <p className="text-center text-gray-500 mt-4 text-sm">
-          💡 Tip: Try commands like <span className="text-green-400">help</span>, <span className="text-green-400">about</span>, <span className="text-green-400">skills</span>, <span className="text-green-400">projects</span>, or use <span className="text-cyan-400">Tab</span> for auto-complete
+          💡 Try: <span className="text-green-400">cd skills</span> → <span className="text-green-400">ls</span> → <span className="text-green-400">cat languages.txt</span> | Use <span className="text-cyan-400">Tab</span> for auto-complete
         </p>
       </div>
     </section>
