@@ -9,64 +9,27 @@ import Projects from './components/Projects';
 import Experience from './components/Experience';
 import Contact from './components/Contact';
 import MatrixRain from './components/MatrixRain';
+import BootScreen from './components/BootScreen';
 
 function App() {
-  const [loading, setLoading] = useState(true);
-  const [bootText, setBootText] = useState<string[]>([]);
+  const [booting, setBooting] = useState(true);
 
-  const bootSequence = [
-    '> Initializing system...',
-    '> Loading kernel modules...',
-    '> Mounting filesystems...',
-    '> Starting network services...',
-    '> Loading portfolio data...',
-    '> Authenticating user: Prakhar Chauhan',
-    '> Access granted.',
-    '> Welcome to prakhar.terminal v2.0',
-    '> System ready.'
-  ];
-
+  // Handle keyboard shortcut to skip boot
   useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index < bootSequence.length) {
-        const currentText = bootSequence[index];
-        setBootText(prev => [...prev, currentText]);
-        index++;
-      } else {
-        clearInterval(interval);
-        setTimeout(() => setLoading(false), 500);
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.code === 'Space' && booting) {
+        setBooting(false);
       }
-    }, 200);
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [booting]);
 
-    return () => clearInterval(interval);
-  }, []);
-
-  if (loading) {
+  if (booting) {
     return (
-      <div className="min-h-screen bg-[#0a0e14] flex items-center justify-center p-8">
-        <div className="terminal-window w-full max-w-2xl">
-          <div className="terminal-header flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="ml-4 text-gray-400 text-sm">boot_sequence.sh</span>
-          </div>
-          <div className="p-6 font-mono text-sm">
-            {bootText.map((text, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className={`mb-1 ${text?.includes('granted') || text?.includes('ready') ? 'text-green-400 glow-text' : 'text-gray-300'}`}
-              >
-                {text}
-              </motion.div>
-            ))}
-            <span className="typing-cursor text-green-400"></span>
-          </div>
-        </div>
-      </div>
+      <AnimatePresence>
+        <BootScreen onComplete={() => setBooting(false)} />
+      </AnimatePresence>
     );
   }
 

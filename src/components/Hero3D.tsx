@@ -1,7 +1,39 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Float } from '@react-three/drei';
 import { motion } from 'framer-motion';
-import { Suspense } from 'react';
+import { Suspense, useState, useEffect } from 'react';
+
+// Typing effect hook
+const useTypingEffect = (text: string, speed: number = 50, delay: number = 0) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    
+    const startTyping = () => {
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < text.length) {
+          setDisplayedText(text.slice(0, index + 1));
+          index++;
+        } else {
+          clearInterval(interval);
+          setIsComplete(true);
+        }
+      }, speed);
+      return interval;
+    };
+
+    timeout = setTimeout(() => {
+      startTyping();
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [text, speed, delay]);
+
+  return { displayedText, isComplete };
+};
 
 const FloatingCube = ({ position, color, size = 1 }: { position: [number, number, number]; color: string; size?: number }) => {
   return (
@@ -45,6 +77,35 @@ const Scene = () => {
 };
 
 const Hero3D = () => {
+  const { displayedText: whoamiText, isComplete: whoamiComplete } = useTypingEffect('whoami', 100, 500);
+  const { displayedText: nameText } = useTypingEffect('Prakhar Chauhan', 80, 1500);
+  const titles = ['Full Stack Developer', 'ML Enthusiast', 'Problem Solver', 'Arch Linux User'];
+  const [titleIndex, setTitleIndex] = useState(0);
+  const [currentTitle, setCurrentTitle] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Rotating title typing effect
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const fullTitle = titles[titleIndex];
+      
+      if (isDeleting) {
+        setCurrentTitle(fullTitle.substring(0, currentTitle.length - 1));
+        if (currentTitle.length === 0) {
+          setIsDeleting(false);
+          setTitleIndex((prev) => (prev + 1) % titles.length);
+        }
+      } else {
+        setCurrentTitle(fullTitle.substring(0, currentTitle.length + 1));
+        if (currentTitle === fullTitle) {
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      }
+    }, isDeleting ? 50 : 100);
+
+    return () => clearTimeout(timeout);
+  }, [currentTitle, isDeleting, titleIndex]);
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-16">
       {/* 3D Canvas Background */}
@@ -66,37 +127,38 @@ const Hero3D = () => {
           {/* Terminal-style greeting */}
           <div className="inline-block mb-6">
             <span className="text-gray-500 text-sm md:text-base">
-              <span className="text-green-400">prakhar@iitj</span>
+              <span className="text-green-400">prakhar@arch</span>
               <span className="text-white">:</span>
               <span className="text-blue-400">~</span>
               <span className="text-white">$ </span>
-              <span className="text-gray-300">whoami</span>
+              <span className="text-gray-300">{whoamiText}</span>
+              {!whoamiComplete && <span className="animate-pulse">▊</span>}
             </span>
           </div>
 
-          {/* Name */}
+          {/* Name with typing effect */}
           <motion.h1
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-          >
-            <span className="text-white">Prakhar </span>
-            <span className="text-green-400 glow-text">Chauhan</span>
-          </motion.h1>
-
-          {/* Title */}
-          <motion.div
-            className="text-xl md:text-2xl lg:text-3xl text-gray-400 mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 1.5, duration: 0.3 }}
+          >
+            <span className="text-white">{nameText.split(' ')[0]} </span>
+            <span className="text-green-400 glow-text">{nameText.split(' ')[1] || ''}</span>
+            {nameText.length < 15 && <span className="animate-pulse text-green-400">▊</span>}
+          </motion.h1>
+
+          {/* Rotating title with typing effect */}
+          <motion.div
+            className="text-xl md:text-2xl lg:text-3xl text-gray-400 mb-8 h-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.5 }}
           >
             <span className="text-cyan-400">&lt;</span>
-            <span className="text-purple-400">Full Stack Developer</span>
-            <span className="text-cyan-400"> / </span>
-            <span className="text-pink-400">ML Enthusiast</span>
-            <span className="text-cyan-400">&gt;</span>
+            <span className="text-purple-400">{currentTitle}</span>
+            <span className="animate-pulse text-purple-400">|</span>
+            <span className="text-cyan-400"> /&gt;</span>
           </motion.div>
 
           {/* Bio */}
@@ -104,13 +166,15 @@ const Hero3D = () => {
             className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto mb-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
+            transition={{ delay: 3 }}
           >
             B.Tech @ <span className="text-yellow-400">IIT Jodhpur</span> | 
             Building cool stuff with <span className="text-green-400">React</span>, 
             <span className="text-blue-400"> Node.js</span>, 
             <span className="text-purple-400"> Python</span> & 
             <span className="text-pink-400"> AI/ML</span>
+            <br />
+            <span className="text-cyan-400 text-sm">btw I use Arch 🐧</span>
           </motion.p>
 
           {/* Stats Cards */}
@@ -118,7 +182,7 @@ const Hero3D = () => {
             className="flex flex-wrap justify-center gap-4 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2 }}
+            transition={{ delay: 3.5 }}
           >
             <div className="terminal-window px-4 py-3 card-3d">
               <div className="text-2xl font-bold text-orange-400">1609</div>
@@ -143,7 +207,7 @@ const Hero3D = () => {
             className="flex flex-wrap justify-center gap-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
+            transition={{ delay: 4 }}
           >
             <a
               href="#projects"

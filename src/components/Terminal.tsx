@@ -22,7 +22,9 @@ const Terminal = () => {
       output: [
         '╔══════════════════════════════════════════════════════════════╗',
         '║  Welcome to Prakhar\'s Interactive Terminal v2.0             ║',
+        '║  Running on Arch Linux 🐧                                   ║',
         '║  Type "help" to see available commands                       ║',
+        '║  Try "neofetch" or "btw" for some fun!                       ║',
         '╚══════════════════════════════════════════════════════════════╝',
         ''
       ]
@@ -370,13 +372,22 @@ const Terminal = () => {
           '│  projects   - Show my projects                              │',
           '│  contact    - Get contact information                       │',
           '│  stats      - Competitive programming stats                 │',
-          '│  neofetch   - Display system info                           │',
+          '│  neofetch   - Display system info (Arch btw)                │',
           '│  whoami     - Display current user                          │',
           '│  date       - Show current date/time                        │',
           '│  echo <msg> - Echo a message                                │',
           '│  clear      - Clear the terminal                            │',
           '│  history    - Show command history                          │',
           '│  matrix     - Toggle matrix rain effect                     │',
+          '├─────────────────────────────────────────────────────────────┤',
+          '│  🐧 Arch Linux Easter Eggs:                                 │',
+          '│  pacman     - Package manager (try: pacman -Syu)            │',
+          '│  yay        - AUR helper                                    │',
+          '│  btw        - You know what this does 😏                    │',
+          '│  fortune    - Get a random fortune                          │',
+          '│  cowsay     - Moo! (cowsay <message>)                       │',
+          '│  sl         - Choo choo!                                    │',
+          '│  sudo       - Nice try (hint: sudo hire_me)                 │',
           '└─────────────────────────────────────────────────────────────┘'
         ]
       };
@@ -496,17 +507,27 @@ const Terminal = () => {
         command: cmd,
         output: [
           '',
-          '  prakhar@portfolio',
-          '  -----------------',
-          '  OS: Portfolio OS 2.0',
-          '  Host: IIT Jodhpur',
-          '  Kernel: React 18.x',
-          '  Shell: zsh 5.9',
-          '  Terminal: hyper',
-          '  CPU: Brain Power ∞',
-          '  Memory: Learning Mode',
+          '                   -`                    prakhar@arch',
+          '                  .o+`                   ──────────────',
+          '                 `ooo/                   OS: Arch Linux x86_64',
+          '                `+oooo:                  Host: IIT Jodhpur',
+          '               `+oooooo:                 Kernel: 6.7.4-arch1-1',
+          '               -+oooooo+:                Uptime: ∞ learning hours',
+          '             `/:-:++oooo+:               Packages: 1337 (pacman)',
+          '            `/++++/+++++++:              Shell: zsh 5.9',
+          '           `/++++++++++++++:             Resolution: Max Potential',
+          '          `/+++ooooooooooooo/`           DE: React 18.3.1',
+          '         ./ooosssso++osssssso+`          WM: Vite 6.x',
+          '        .oossssso-````/ossssss+`         Theme: Terminal Dark',
+          '       -osssssso.      :ssssssso.        Terminal: hyper',
+          '      :osssssss/        osssso+++.       CPU: Brain @ ∞GHz',
+          '     /ossssssss/        +ssssooo/-       Memory: Learning Mode',
+          '   `/ossssso+/:-        -:/+osssso+-     GPU: RTX Imagination',
+          '  `+sso+:-`                 `.-/+oso:    Disk: 480+ Problems Solved',
+          ' `++:.                           `-/+/',
+          ' .`                                 `/', 
           '',
-          '  ████████████████████████',
+          '  ████████████████████████████████████',
           ''
         ]
       };
@@ -563,11 +584,201 @@ const Terminal = () => {
 
     // Handle 'sudo' command
     if (mainCommand === 'sudo') {
+      const sudoArg = args.join(' ').toLowerCase();
+      if (sudoArg === 'hire_me' || sudoArg === 'hire me') {
+        return {
+          command: cmd,
+          output: [
+            '',
+            '  ╔════════════════════════════════════════════════════════════╗',
+            '  ║   🎉 CONGRATULATIONS! You found the secret command!        ║',
+            '  ╠════════════════════════════════════════════════════════════╣',
+            '  ║                                                            ║',
+            '  ║   I\'m actively looking for opportunities!                  ║',
+            '  ║                                                            ║',
+            '  ║   📧 Email: prakharchauhan179@gmail.com                    ║',
+            '  ║   📱 Phone: +91-8369512080                                 ║',
+            '  ║   💼 LinkedIn: prakhar-chauhan-9a32b52b4                   ║',
+            '  ║                                                            ║',
+            '  ║   Let\'s build something amazing together! 🚀              ║',
+            '  ║                                                            ║',
+            '  ╚════════════════════════════════════════════════════════════╝',
+            ''
+          ]
+        };
+      }
+      if (sudoArg.includes('pacman') || sudoArg.includes('rm -rf')) {
+        return {
+          command: cmd,
+          output: [
+            '  ⚠️  [sudo] password for prakhar: ************',
+            '  🛑 Nice try! This portfolio is immutable btw 😎'
+          ]
+        };
+      }
       return {
         command: cmd,
         output: [
           '  ⚠️  [sudo] password for prakhar: ',
-          '  Nice try! But you don\'t have root access here 😄'
+          '  Nice try! But you don\'t have root access here 😄',
+          '  Hint: Try "sudo hire_me" 👀'
+        ]
+      };
+    }
+
+    // Handle 'pacman' command (Arch easter egg)
+    if (mainCommand === 'pacman') {
+      if (args[0] === '-Syu') {
+        return {
+          command: cmd,
+          output: [
+            '  :: Synchronizing package databases...',
+            '   core is up to date',
+            '   extra is up to date',
+            '   community is up to date',
+            '  :: Starting full system upgrade...',
+            '  resolving dependencies...',
+            '  looking for conflicting packages...',
+            '',
+            '  Packages (0) ',
+            '',
+            '  There is nothing to do.',
+            '  System already bleeding edge! 🔥 btw I use Arch'
+          ]
+        };
+      }
+      if (args[0] === '-Ss' || args[0] === '-Q') {
+        return {
+          command: cmd,
+          output: [
+            '  extra/react 18.3.1-1 (installed)',
+            '      A JavaScript library for building user interfaces',
+            '  extra/typescript 5.3.3-1 (installed)',
+            '      TypeScript is a typed superset of JavaScript',
+            '  extra/tailwindcss 3.4.19-1 (installed)',
+            '      A utility-first CSS framework',
+            '  extra/three.js 0.160.0-1 (installed)',
+            '      JavaScript 3D library',
+            '  aur/hire-prakhar 2.0-1 (installed)',
+            '      The best developer for your team 🚀',
+          ]
+        };
+      }
+      return {
+        command: cmd,
+        output: [
+          '  Usage:  pacman <operation> [...]',
+          '  Operations:',
+          '      -Syu  - Upgrade all packages',
+          '      -Ss   - Search for packages',
+          '      -Q    - Query installed packages',
+          '',
+          '  btw I use Arch 🐧'
+        ]
+      };
+    }
+
+    // Handle 'btw' easter egg
+    if (trimmedCmd.toLowerCase() === 'btw' || trimmedCmd.toLowerCase() === 'btw i use arch') {
+      return {
+        command: cmd,
+        output: [
+          '',
+          '  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⡿⠛⠉⠉⠛⠿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⢰⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⣾⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⢻⣿⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⠘⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⠀⠹⣿⣿⣿⣷⣄⡀⠀⣀⣴⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀',
+          '  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⠿⣿⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀',
+          '',
+          '  I use Arch btw. 🐧',
+          '  Kernel: 6.7.4-arch1-1',
+          '  Packages: 1337 (pacman)',
+          '  Uptime: Since 2023',
+          ''
+        ]
+      };
+    }
+
+    // Handle 'yay' command (AUR helper easter egg)
+    if (mainCommand === 'yay') {
+      return {
+        command: cmd,
+        output: [
+          '  :: Searching AUR for hire-prakhar...',
+          '  aur/hire-prakhar 2.0-1 (+1337 0.00)',
+          '      Full Stack Developer | ML Enthusiast | Problem Solver',
+          '',
+          '  :: Proceed with installation? [Y/n] Y',
+          '  :: Resolving dependencies...',
+          '  :: Downloading hire-prakhar...',
+          '  ==> Making package: hire-prakhar 2.0-1',
+          '  ==> Successfully built hire-prakhar',
+          '  🎉 Prakhar is now available for your team!'
+        ]
+      };
+    }
+
+    // Handle 'fortune' command
+    if (mainCommand === 'fortune') {
+      const fortunes = [
+        '"Code is like humor. When you have to explain it, it\'s bad." - Cory House',
+        '"First, solve the problem. Then, write the code." - John Johnson',
+        '"The best error message is the one that never shows up." - Thomas Fuchs',
+        '"Programming isn\'t about what you know; it\'s about what you can figure out."',
+        '"btw I use Arch" - Every Arch User Ever',
+        '"If it works on my machine, we ship my machine." - Anonymous Dev',
+        '"sudo rm -rf / --no-preserve-root # just kidding, don\'t" - Satan',
+        '"I don\'t always test my code, but when I do, I do it in production." - Most Honest Dev'
+      ];
+      return {
+        command: cmd,
+        output: ['', '  ' + fortunes[Math.floor(Math.random() * fortunes.length)], '']
+      };
+    }
+
+    // Handle 'cowsay' command
+    if (mainCommand === 'cowsay') {
+      const message = args.join(' ') || 'btw I use Arch';
+      const line = '─'.repeat(message.length + 2);
+      return {
+        command: cmd,
+        output: [
+          '',
+          `   ╭${line}╮`,
+          `   │ ${message} │`,
+          `   ╰${line}╯`,
+          '          \\   ^__^',
+          '           \\  (oo)\\_______',
+          '              (__)\\       )\\/\\',
+          '                  ||----w |',
+          '                  ||     ||',
+          ''
+        ]
+      };
+    }
+
+    // Handle 'sl' command (steam locomotive easter egg)
+    if (mainCommand === 'sl') {
+      return {
+        command: cmd,
+        output: [
+          '',
+          '      ====        ________                ___________',
+          '  _D _|  |_______/        \\__I_I_____===__|_________|',
+          '   |(_)---  |   H\\________/ |   |        =|___ ___|  ',
+          '   /     |  |   H  |  |     |   |         ||_| |_||  ',
+          '  |      |  |   H  |__--------------------| [___] |  ',
+          '  | ________|___H__/__|_____/[][]~\\_______|       |  ',
+          '  |/ |   |-----------I_____I [][] []  D   |=======|__',
+          '',
+          '  🚂 You meant "ls", didn\'t you? btw I use Arch'
         ]
       };
     }
