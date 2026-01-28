@@ -107,6 +107,35 @@ const About = () => {
                 </li>
               </ul>
             </div>
+
+            <div className="terminal-window p-6">
+              <div className="text-gray-400 text-sm mb-4">
+                <span className="text-green-400">// </span>What I'm looking for
+              </div>
+              <p className="text-gray-300 leading-relaxed mb-4">
+                I'm seeking a <span className="text-green-400">high-impact role</span> at an 
+                <span className="text-yellow-400"> early-stage startup</span> where I can wear multiple 
+                hats and directly contribute to building products that matter.
+              </p>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <span className="text-cyan-400">→</span>
+                  <span className="text-gray-300">Fast-paced environment with steep learning curve</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-cyan-400">→</span>
+                  <span className="text-gray-300">Ownership & autonomy over features end-to-end</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-cyan-400">→</span>
+                  <span className="text-gray-300">Collaborative team solving real-world problems</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-cyan-400">→</span>
+                  <span className="text-gray-300">Opportunities in Full Stack, AI/ML, or DevOps</span>
+                </li>
+              </ul>
+            </div>
           </motion.div>
         </div>
       </div>
