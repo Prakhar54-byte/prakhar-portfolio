@@ -9,8 +9,6 @@ const useTypingEffect = (text: string, speed: number = 50, delay: number = 0) =>
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>;
-    
     const startTyping = () => {
       let index = 0;
       const interval = setInterval(() => {
@@ -25,7 +23,7 @@ const useTypingEffect = (text: string, speed: number = 50, delay: number = 0) =>
       return interval;
     };
 
-    timeout = setTimeout(() => {
+    const timeout = setTimeout(() => {
       startTyping();
     }, delay);
 

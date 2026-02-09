@@ -10,6 +10,7 @@ import Experience from './components/Experience';
 import Contact from './components/Contact';
 import MatrixRain from './components/MatrixRain';
 import BootScreen from './components/BootScreen';
+import VisitorCounter from './components/VisitorCounter';
 
 function App() {
   const [booting, setBooting] = useState(true);
@@ -62,6 +63,7 @@ function App() {
         <p className="text-gray-600 text-xs mt-2">
           © 2026 | IIT Jodhpur
         </p>
+        <VisitorCounter />
       </footer>
     </div>
   );
