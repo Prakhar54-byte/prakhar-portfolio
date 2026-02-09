@@ -5,7 +5,8 @@ import { useState, useEffect, useRef } from 'react';
 const VISIT_THRESHOLD_SECONDS = 10;
 
 // CounterAPI.dev configuration
-const COUNTER_NAME = import.meta.env.VITE_COUNTER_NAME ;
+const COUNTER_NAME = import.meta.env.VITE_COUNTER_NAME || 'httpsprakhar-portfolio-etavercelapp';
+const COUNTER_TOKEN = import.meta.env.VITE_COUNTER_TOKEN;
 
 // Helper to check if session was already counted
 const isSessionCounted = () => {
@@ -17,7 +18,12 @@ const isSessionCounted = () => {
 const fetchCount = async (): Promise<number> => {
   try {
     const response = await fetch(
-      `https://api.counterapi.dev/v1/${COUNTER_NAME}/visitors/`
+      `https://api.counterapi.dev/v1/${COUNTER_NAME}/visitors/`,
+      {
+        headers: {
+          'Authorization': `Bearer ${COUNTER_TOKEN}`,
+        },
+      }
     );
     const data = await response.json();
     const value = data.count ?? 0;
@@ -35,7 +41,12 @@ const fetchCount = async (): Promise<number> => {
 const incrementCount = async (): Promise<number> => {
   try {
     const response = await fetch(
-      `https://api.counterapi.dev/v1/${COUNTER_NAME}/visitors/up`
+      `https://api.counterapi.dev/v1/${COUNTER_NAME}/visitors/up`,
+      {
+        headers: {
+          'Authorization': `Bearer ${COUNTER_TOKEN}`,
+        },
+      }
     );
     const data = await response.json();
     // Cache real value for offline fallback
