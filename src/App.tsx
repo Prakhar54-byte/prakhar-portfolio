@@ -11,7 +11,8 @@ import Contact from './components/Contact';
 import MatrixRain from './components/MatrixRain';
 import BootScreen from './components/BootScreen';
 import VisitorCounter from './components/VisitorCounter';
-import { Analytics } from '@vercel/analytics/next';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   const [booting, setBooting] = useState(true);
@@ -66,9 +67,10 @@ function App() {
         </p>
         <VisitorCounter />
       </footer>
+      <Analytics />
+      <SpeedInsights />
     </div>
   );
 }
 
 export default App;
-< Analytics />
