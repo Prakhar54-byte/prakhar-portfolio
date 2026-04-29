@@ -11,6 +11,7 @@ import Contact from './components/Contact';
 import MatrixRain from './components/MatrixRain';
 import BootScreen from './components/BootScreen';
 import VisitorCounter from './components/VisitorCounter';
+import { Analytics } from '@vercel/analytics/next';
 
 function App() {
   const [booting, setBooting] = useState(true);
@@ -70,3 +71,4 @@ function App() {
 }
 
 export default App;
+< Analytics />
