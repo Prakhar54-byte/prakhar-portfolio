@@ -11,6 +11,7 @@ import Contact from './components/Contact';
 import MatrixRain from './components/MatrixRain';
 import BootScreen from './components/BootScreen';
 import VisitorCounter from './components/VisitorCounter';
+import Dashboard from './components/Dashboard';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
@@ -27,6 +28,10 @@ function App() {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [booting]);
+
+  if (window.location.pathname === '/dashboard') {
+    return <Dashboard />;
+  }
 
   if (booting) {
     return (

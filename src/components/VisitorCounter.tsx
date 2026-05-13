@@ -1,12 +1,20 @@
-// import process from 'process';
 import { useState, useEffect, useRef } from 'react';
 
 // Time threshold in seconds - user must stay this long for visit to count
 const VISIT_THRESHOLD_SECONDS = 10;
 
-// CounterAPI.dev configuration
-const COUNTER_NAME = import.meta.env.VITE_COUNTER_NAME || 'httpsprakhar-portfolio-etavercelapp';
-const COUNTER_TOKEN = import.meta.env.VITE_COUNTER_TOKEN;
+// Custom Analytics API configuration
+const API_URL = 'http://localhost:3001'; // Change this for production deployment
+
+interface VisitorData {
+  ip?: string;
+  city?: string;
+  region?: string;
+  country?: string;
+  userAgent?: string;
+  browser?: string;
+  os?: string;
+}
 
 // Helper to check if session was already counted
 const isSessionCounted = () => {
@@ -17,21 +25,13 @@ const isSessionCounted = () => {
 // Fetch current count without incrementing
 const fetchCount = async (): Promise<number> => {
   try {
-    const response = await fetch(
-      `https://api.counterapi.dev/v1/${COUNTER_NAME}/visitors/`,
-      {
-        headers: {
-          'Authorization': `Bearer ${COUNTER_TOKEN}`,
-        },
-      }
-    );
+    const response = await fetch(`${API_URL}/stats`);
+    if (!response.ok) throw new Error('API error');
     const data = await response.json();
-    const value = data.count ?? 0;
-    // Cache real value for offline fallback
+    const value = data.totalVisits ?? 0;
     localStorage.setItem('visitorCountFallback', value.toString());
     return value;
   } catch {
-    // Fallback to last known real value from localStorage
     const stored = localStorage.getItem('visitorCountFallback');
     return stored ? parseInt(stored, 10) : 0;
   }
@@ -40,20 +40,60 @@ const fetchCount = async (): Promise<number> => {
 // Increment and fetch new count
 const incrementCount = async (): Promise<number> => {
   try {
-    const response = await fetch(
-      `https://api.counterapi.dev/v1/${COUNTER_NAME}/visitors/up`,
-      {
-        headers: {
-          'Authorization': `Bearer ${COUNTER_TOKEN}`,
-        },
+    // 1. Get visitor details (IP, location, etc.)
+    let visitorData: VisitorData = {};
+    try {
+      const ipRes = await fetch('https://ipapi.co/json/');
+      if (ipRes.ok) {
+        const ipData = await ipRes.json();
+        visitorData = {
+          ip: ipData.ip,
+          city: ipData.city,
+          region: ipData.region,
+          country: ipData.country_name
+        };
       }
-    );
-    const data = await response.json();
-    // Cache real value for offline fallback
-    localStorage.setItem('visitorCountFallback', data.count.toString());
-    return data.count;
-  } catch {
-    // If API fails, just return the last known count (don't fake increment)
+    } catch (error) {
+      console.warn('Could not fetch IP details', error);
+    }
+
+    // Add browser/OS info
+    visitorData.userAgent = navigator.userAgent;
+    // Basic browser detection
+    let browser = 'Unknown';
+    if (navigator.userAgent.includes('Firefox')) browser = 'Firefox';
+    else if (navigator.userAgent.includes('Chrome')) browser = 'Chrome';
+    else if (navigator.userAgent.includes('Safari')) browser = 'Safari';
+    else if (navigator.userAgent.includes('Edge')) browser = 'Edge';
+    visitorData.browser = browser;
+    
+    // Basic OS detection
+    let os = 'Unknown';
+    if (navigator.userAgent.includes('Win')) os = 'Windows';
+    else if (navigator.userAgent.includes('Mac')) os = 'MacOS';
+    else if (navigator.userAgent.includes('Linux')) os = 'Linux';
+    else if (navigator.userAgent.includes('Android')) os = 'Android';
+    else if (navigator.userAgent.includes('like Mac')) os = 'iOS';
+    visitorData.os = os;
+
+    // 2. Send to our API
+    await fetch(`${API_URL}/track`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(visitorData)
+    });
+
+    // 3. Fetch new total count
+    const statsRes = await fetch(`${API_URL}/stats`);
+    const stats = await statsRes.json();
+    const count = stats.totalVisits;
+    
+    localStorage.setItem('visitorCountFallback', count.toString());
+    return count;
+  } catch (error) {
+    console.error('Failed to increment count', error);
     const stored = localStorage.getItem('visitorCountFallback');
     return stored ? parseInt(stored, 10) : 0;
   }
@@ -66,16 +106,13 @@ function VisitorCounter() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Fetch initial count
     fetchCount().then((initialCount) => {
       setCount(initialCount);
       setLoading(false);
     });
 
-    // If already counted in this session, don't set up timer
     if (counted) return;
 
-    // Set up threshold timer to increment count
     timerRef.current = setTimeout(async () => {
       const newCount = await incrementCount();
       sessionStorage.setItem('sessionCounted', 'true');
