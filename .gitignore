@@ -30,3 +30,5 @@ dist-ssr
 
 src/components/Dashboard.tsx
 .env
+analytics-api/
+cli-monitor/
