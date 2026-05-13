@@ -28,7 +28,6 @@ dist-ssr
 *.sln
 *.sw?
 
-src/components/Dashboard.tsx
 .env
 analytics-api/
 cli-monitor/
