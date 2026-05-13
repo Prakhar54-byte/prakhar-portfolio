@@ -33,16 +33,16 @@ function App() {
     return <Dashboard />;
   }
 
-  if (booting) {
-    return (
-      <AnimatePresence>
-        <BootScreen onComplete={() => setBooting(false)} />
-      </AnimatePresence>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-[#0a0e14] grid-bg scanlines">
+    <>
+      <AnimatePresence>
+        {booting && <BootScreen onComplete={() => setBooting(false)} />}
+      </AnimatePresence>
+
+      {/* Main App Content - Renders in background during boot */}
+      <div 
+        className={`min-h-screen bg-[#0a0e14] grid-bg scanlines ${booting ? 'h-screen overflow-hidden' : ''}`}
+      >
       <MatrixRain />
       <Navbar />
       
@@ -75,6 +75,7 @@ function App() {
       <Analytics />
       <SpeedInsights />
     </div>
+    </>
   );
 }
 
