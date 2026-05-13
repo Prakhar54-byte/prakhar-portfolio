@@ -123,7 +123,7 @@ const Contact = () => {
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-green-400 to-cyan-400 mx-auto"></div>
           <p className="text-gray-400 mt-4">
-            Let's build something awesome together!
+            Let's build useful AI/ML systems together.
           </p>
         </motion.div>
 
@@ -139,7 +139,7 @@ const Contact = () => {
                 <div className="w-3 h-3 rounded-full bg-red-500" />
                 <div className="w-3 h-3 rounded-full bg-yellow-500" />
                 <div className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-gray-500 text-sm ml-2">send_message.sh</span>
+                <span className="text-gray-500 text-sm ml-2">ml_opportunity.sh</span>
               </div>
 
               {submitted ? (
@@ -258,7 +258,7 @@ const Contact = () => {
             {/* Social Links */}
             <div className="terminal-window p-6">
               <h3 className="text-lg font-bold text-white mb-4">
-                <span className="text-yellow-400">🔗</span> Find me online
+                <span className="text-yellow-400">🔗</span> AI/ML signal
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 {socialLinks.map((link) => (
@@ -287,9 +287,9 @@ const Contact = () => {
             {/* Fun Terminal */}
             <div className="terminal-window p-4">
               <p className="text-gray-500 text-sm">
-                <span className="text-green-400">$</span> echo "Open to opportunities!"
+                <span className="text-green-400">$</span> echo "Open to AI/ML opportunities!"
               </p>
-              <p className="text-cyan-400 text-sm mt-1">Open to opportunities! 🚀</p>
+              <p className="text-cyan-400 text-sm mt-1">Open to AI/ML opportunities! 🚀</p>
             </div>
           </motion.div>
         </div>

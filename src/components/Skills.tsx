@@ -2,64 +2,65 @@ import { motion } from 'framer-motion';
 
 const skillCategories = [
   {
-    title: 'Languages',
+    title: 'ML Core',
     icon: '💻',
     color: 'green',
     skills: [
-      { name: 'C/C++', level: 90 },
-      { name: 'Python', level: 85 },
-      { name: 'JavaScript', level: 88 },
-      { name: 'TypeScript', level: 82 },
+      { name: 'Python', level: 90 },
+      { name: 'PyTorch', level: 82 },
+      { name: 'scikit-learn', level: 84 },
+      { name: 'NumPy/Pandas', level: 86 },
     ]
   },
   {
-    title: 'Frontend',
+    title: 'Deep Learning',
     icon: '🎨',
     color: 'cyan',
     skills: [
-      { name: 'React', level: 88 },
-      { name: 'Tailwind CSS', level: 90 },
-      { name: 'HTML/CSS', level: 92 },
+      { name: 'Computer Vision', level: 82 },
+      { name: 'ResNet/YOLO', level: 78 },
+      { name: 'Model Evaluation', level: 84 },
     ]
   },
   {
-    title: 'Backend',
+    title: 'MLOps',
     icon: '⚙️',
     color: 'purple',
     skills: [
-      { name: 'Node.js', level: 85 },
-      { name: 'Express.js', level: 82 },
-      { name: 'Django', level: 78 },
-      { name: 'FastAPI', level: 75 },
+      { name: 'FastAPI Serving', level: 82 },
+      { name: 'Docker', level: 78 },
+      { name: 'MLflow', level: 76 },
+      { name: 'ONNX Runtime', level: 72 },
     ]
   },
   {
-    title: 'Databases',
+    title: 'AI Apps',
     icon: '🗄️',
     color: 'yellow',
     skills: [
-      { name: 'PostgreSQL', level: 80 },
-      { name: 'MongoDB', level: 82 },
+      { name: 'RAG Workflows', level: 76 },
+      { name: 'Google Gemini', level: 78 },
+      { name: 'PDF Parsing', level: 80 },
     ]
   },
   {
-    title: 'ML & Data',
+    title: 'Data & Tracking',
     icon: '🤖',
     color: 'pink',
     skills: [
-      { name: 'PyTorch', level: 70 },
-      { name: 'scikit-learn', level: 75 },
-      { name: 'NumPy/Pandas', level: 80 },
+      { name: 'W&B', level: 76 },
+      { name: 'Hugging Face', level: 78 },
+      { name: 'Prometheus', level: 70 },
     ]
   },
   {
-    title: 'DevOps & Tools',
+    title: 'Product Layer',
     icon: '🛠️',
     color: 'orange',
     skills: [
-      { name: 'Git', level: 90 },
-      { name: 'Docker', level: 78 },
-      { name: 'MLflow', level: 70 },
+      { name: 'React Dashboards', level: 84 },
+      { name: 'Django/DRF', level: 78 },
+      { name: 'PostgreSQL', level: 80 },
     ]
   }
 ];
@@ -143,7 +144,7 @@ const Skills = () => {
           className="mt-12 text-center"
         >
           <p className="text-gray-500 text-sm mb-4">
-            <span className="text-green-400">$</span> echo "Currently exploring..."
+            <span className="text-green-400">$</span> echo "Currently sharpening..."
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-2xl">
             {['⚛️', '🟢', '🐍', '🐳', '⚡', '🔥', '📊', '🤖'].map((emoji, i) => (

@@ -73,14 +73,13 @@ const About = () => {
                 <span className="text-green-400">// </span>Who am I?
               </div>
               <p className="text-gray-300 leading-relaxed">
-                I'm an aspiring <span className="text-green-400">Software Developer</span> studying at 
-                <span className="text-yellow-400"> IIT Jodhpur</span>. Passionate about exploring new 
-                technologies and building impactful solutions.
+                I'm an aspiring <span className="text-green-400">AI/ML Engineer + Software Developer</span> studying at 
+                <span className="text-yellow-400"> IIT Jodhpur</span>, focused on applied machine learning, 
+                computer vision, and production-ready model deployment.
               </p>
               <p className="text-gray-300 leading-relaxed mt-4">
-                Currently diving deeper into <span className="text-cyan-400">Full Stack Development</span> 
-                with React, Node.js, and TypeScript, while also exploring 
-                <span className="text-purple-400"> ML/AI applications</span>.
+                Currently building with <span className="text-cyan-400">PyTorch, FastAPI, MLflow, Docker</span> 
+                and observability tools while using frontend skills to ship clear ML demos and dashboards.
               </p>
             </div>
 
@@ -91,19 +90,19 @@ const About = () => {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <span className="text-green-400">✓</span>
-                  <span className="text-gray-300">Building production-ready applications</span>
+                  <span className="text-gray-300">Building production-ready AI/ML systems</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-green-400">✓</span>
-                  <span className="text-gray-300">Solving complex algorithmic problems</span>
+                  <span className="text-gray-300">Experimenting with models, metrics, and data pipelines</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-green-400">✓</span>
-                  <span className="text-gray-300">Contributing to open-source projects</span>
+                  <span className="text-gray-300">Deploying inference APIs, dashboards, and monitoring hooks</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-green-400">✓</span>
-                  <span className="text-gray-300">Exploring intersection of Bio & Tech</span>
+                  <span className="text-gray-300">Exploring healthcare AI and computer vision</span>
                 </li>
               </ul>
             </div>
@@ -113,26 +112,25 @@ const About = () => {
                 <span className="text-green-400">// </span>What I'm looking for
               </div>
               <p className="text-gray-300 leading-relaxed mb-4">
-                I'm seeking a <span className="text-green-400">high-impact role</span> at an 
-                <span className="text-yellow-400"> early-stage startup</span> where I can wear multiple 
-                hats and directly contribute to building products that matter.
+                I'm seeking an <span className="text-green-400">AI/ML internship or entry-level role</span> where I can 
+                turn models and backend systems into useful products: training pipelines, inference services, APIs, and monitoring.
               </p>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <span className="text-cyan-400">→</span>
-                  <span className="text-gray-300">Fast-paced environment with steep learning curve</span>
+                  <span className="text-gray-300">Applied ML, MLOps, backend, or product engineering teams</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-cyan-400">→</span>
-                  <span className="text-gray-300">Ownership & autonomy over features end-to-end</span>
+                  <span className="text-gray-300">Ownership across data, model, API, and deployment</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-cyan-400">→</span>
-                  <span className="text-gray-300">Collaborative team solving real-world problems</span>
+                  <span className="text-gray-300">Real-world datasets, measurable outcomes, and iteration</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-cyan-400">→</span>
-                  <span className="text-gray-300">Opportunities in Full Stack, AI/ML, or DevOps</span>
+                  <span className="text-gray-300">Opportunities to learn from strong ML engineers</span>
                 </li>
               </ul>
             </div>

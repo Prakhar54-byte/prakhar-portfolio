@@ -21,6 +21,20 @@ Before deploying, make sure:
 
 Vercel is the easiest way to deploy React/Vite apps. It's free for personal projects!
 
+### Updating your resume
+
+Put your latest PDF at `public/resume.pdf` and push the change:
+
+```bash
+git add public/resume.pdf
+git commit -m "Update resume"
+git push
+```
+
+The site links to `/resume.pdf` by default, so you do not need to upload the file to Drive, copy a link into `.env`, or redeploy manually. Vercel will deploy the new PDF automatically after the push.
+
+If you ever want to use an external resume link again, set `VITE_RESUME_URL` in your environment variables.
+
 ### Step 1: Push to GitHub
 
 ```bash

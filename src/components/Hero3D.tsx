@@ -2,6 +2,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Float } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { Suspense, useState, useEffect } from 'react';
+import { RESUME_URL } from '../config/resume';
 
 // Typing effect hook
 const useTypingEffect = (text: string, speed: number = 50, delay: number = 0) => {
@@ -77,7 +78,7 @@ const Scene = () => {
 const Hero3D = () => {
   const { displayedText: whoamiText, isComplete: whoamiComplete } = useTypingEffect('whoami', 100, 500);
   const { displayedText: nameText } = useTypingEffect('Prakhar Chauhan', 80, 1500);
-  const titles = ['Full Stack Developer', 'ML Enthusiast', 'Problem Solver', 'Arch Linux User'];
+  const titles = ['AI/ML Engineer', 'Software Developer', 'MLOps Builder', 'Computer Vision Developer'];
   const [titleIndex, setTitleIndex] = useState(0);
   const [currentTitle, setCurrentTitle] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -161,42 +162,58 @@ const Hero3D = () => {
 
           {/* Bio */}
           <motion.p
-            className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto mb-8"
+            className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto mb-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 3 }}
           >
             B.Tech @ <span className="text-yellow-400">IIT Jodhpur</span> | 
-            Building cool stuff with <span className="text-green-400">React</span>, 
-            <span className="text-blue-400"> Node.js</span>, 
-            <span className="text-purple-400"> Python</span> & 
-            <span className="text-pink-400"> AI/ML</span>
+            Building AI systems with <span className="text-green-400">Python</span>, 
+            <span className="text-blue-400"> PyTorch</span>, 
+            <span className="text-purple-400"> FastAPI</span> & 
+            <span className="text-pink-400"> MLOps</span>
             <br />
-            <span className="text-cyan-400 text-sm">btw I use Arch 🐧</span>
+            <span className="text-cyan-400 text-sm">focused on applied ML, backend systems, and model deployment</span>
           </motion.p>
+
+          <motion.div
+            className="terminal-window inline-flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 px-4 py-3 mb-8 text-xs md:text-sm text-gray-400"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 3.2 }}
+          >
+            <span>
+              <span className="text-green-400">$</span> seeking:
+              <span className="text-white"> AI/ML · MLOps · SDE Intern roles</span>
+            </span>
+            <span className="hidden sm:inline text-gray-600">|</span>
+            <span>
+              <span className="text-cyan-400">stack:</span> Python · PyTorch · FastAPI · Docker · React
+            </span>
+          </motion.div>
 
           {/* Stats Cards */}
           <motion.div
             className="flex flex-wrap justify-center gap-4 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 3.5 }}
+            transition={{ delay: 3.6 }}
           >
             <div className="terminal-window px-4 py-3 card-3d">
-              <div className="text-2xl font-bold text-orange-400">1609</div>
-              <div className="text-xs text-gray-500">Codeforces</div>
+              <div className="text-2xl font-bold text-orange-400">14</div>
+              <div className="text-xs text-gray-500">Disease Labels</div>
             </div>
             <div className="terminal-window px-4 py-3 card-3d">
-              <div className="text-2xl font-bold text-yellow-400">1735</div>
-              <div className="text-xs text-gray-500">LeetCode</div>
+              <div className="text-2xl font-bold text-yellow-400">0.92</div>
+              <div className="text-xs text-gray-500">Best R2</div>
             </div>
             <div className="terminal-window px-4 py-3 card-3d">
-              <div className="text-2xl font-bold text-green-400">480+</div>
-              <div className="text-xs text-gray-500">Problems</div>
+              <div className="text-2xl font-bold text-green-400">99.4%</div>
+              <div className="text-xs text-gray-500">MNIST Acc</div>
             </div>
             <div className="terminal-window px-4 py-3 card-3d">
-              <div className="text-2xl font-bold text-purple-400">100+</div>
-              <div className="text-xs text-gray-500">Day Streak</div>
+              <div className="text-2xl font-bold text-purple-400">6</div>
+              <div className="text-xs text-gray-500">Case Studies</div>
             </div>
           </motion.div>
 
@@ -205,7 +222,7 @@ const Hero3D = () => {
             className="flex flex-wrap justify-center gap-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 4 }}
+            transition={{ delay: 4.1 }}
           >
             <a
               href="#projects"
@@ -214,7 +231,7 @@ const Hero3D = () => {
               <span className="mr-2">$</span>view_projects
             </a>
             <a
-              href={import.meta.env.VITE_RESUME_URL || '#'}
+              href={RESUME_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 bg-purple-500/20 border border-purple-400 text-purple-400 rounded-lg hover:bg-purple-400 hover:text-black transition-all duration-300 flex items-center gap-2"

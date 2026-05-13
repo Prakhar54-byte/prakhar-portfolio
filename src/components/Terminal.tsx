@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { RESUME_URL } from '../config/resume';
 
 interface HistoryItem {
   command: string;
@@ -22,7 +23,7 @@ const Terminal = () => {
       output: [
         '╔══════════════════════════════════════════════════════════════╗',
         '║  Welcome to Prakhar\'s Interactive Terminal v2.0             ║',
-        '║  Running on Arch Linux 🐧                                   ║',
+        '║  AI/ML portfolio shell                                      ║',
         '║  Type "help" to see available commands                       ║',
         '║  Try "neofetch" or "btw" for some fun!                       ║',
         '╚══════════════════════════════════════════════════════════════╝',
@@ -53,8 +54,8 @@ const Terminal = () => {
           '  👋 Hey! I\'m Prakhar Chauhan',
           '  🎓 B.Tech in Biological Sciences & Bioengineering @ IIT Jodhpur',
           '  📚 Minor in Artificial Intelligence & Data Science',
-          '  💻 Full Stack Developer | ML Enthusiast | Problem Solver',
-          '  🚀 Building production-ready applications since 2023',
+          '  💻 AI/ML Engineer | Software Developer | MLOps Builder',
+          '  🚀 Building model pipelines, backend APIs, and ML dashboards',
           '  📍 IIT Jodhpur, Rajasthan, India',
           ''
         ]
@@ -92,8 +93,8 @@ const Terminal = () => {
           '  {',
           '    "experience": [',
           '      {',
-          '        "role": "Backend Developer",',
-          '        "company": "CSR Connect",',
+          '        "role": "AI/ML Developer",',
+          '        "company": "CSR Connect - Gemini SDG Classification",',
           '        "duration": "Jan 2025 - Mar 2025"',
           '      },',
           '      {',
@@ -127,12 +128,12 @@ const Terminal = () => {
             type: 'file',
             content: [
               '',
-              '  💻 Programming Languages:',
-              '     ├── C/C++      ████████████████████ 95%',
-              '     ├── Python     ███████████████████░ 90%',
-              '     ├── JavaScript ██████████████████░░ 85%',
-              '     ├── TypeScript █████████████████░░░ 80%',
-              '     └── Java       ███████████████░░░░░ 70%',
+              '  💻 AI/ML Core:',
+              '     ├── Python       ██████████████████░░ 90%',
+              '     ├── PyTorch      ████████████████░░░░ 82%',
+              '     ├── scikit-learn █████████████████░░░ 84%',
+              '     ├── NumPy/Pandas █████████████████░░░ 86%',
+              '     └── XGBoost      ███████████████░░░░░ 76%',
               ''
             ]
           },
@@ -140,11 +141,11 @@ const Terminal = () => {
             type: 'file',
             content: [
               '',
-              '  🌐 Frontend Technologies:',
-              '     ├── React.js   ███████████████████░ 90%',
-              '     ├── Next.js    █████████████████░░░ 80%',
-              '     ├── TailwindCSS████████████████████ 95%',
-              '     └── HTML/CSS   ████████████████████ 95%',
+              '  🌐 AI Product Interfaces:',
+              '     ├── React.js    █████████████████░░░ 84%',
+              '     ├── Next.js     ████████████████░░░░ 80%',
+              '     ├── Gradio      ███████████████░░░░░ 76%',
+              '     └── TailwindCSS ██████████████████░░ 88%',
               ''
             ]
           },
@@ -152,11 +153,11 @@ const Terminal = () => {
             type: 'file',
             content: [
               '',
-              '  ⚙️  Backend Technologies:',
-              '     ├── Node.js    ██████████████████░░ 85%',
-              '     ├── Django     █████████████████░░░ 80%',
-              '     ├── FastAPI    ██████████████████░░ 85%',
-              '     └── Express.js █████████████████░░░ 80%',
+              '  ⚙️  Model Serving & APIs:',
+              '     ├── FastAPI     █████████████████░░░ 82%',
+              '     ├── Django/DRF  ████████████████░░░░ 78%',
+              '     ├── ONNX Runtime██████████████░░░░░░ 72%',
+              '     └── REST APIs   █████████████████░░░ 84%',
               ''
             ]
           },
@@ -164,10 +165,11 @@ const Terminal = () => {
             type: 'file',
             content: [
               '',
-              '  🗄️  Databases:',
-              '     ├── PostgreSQL ██████████████████░░ 85%',
-              '     ├── MongoDB    █████████████████░░░ 80%',
-              '     └── Redis      ██████████████░░░░░░ 65%',
+              '  🗄️  Data & Experiment Tracking:',
+              '     ├── MLflow      ███████████████░░░░░ 76%',
+              '     ├── W&B         ███████████████░░░░░ 76%',
+              '     ├── PostgreSQL  ████████████████░░░░ 80%',
+              '     └── Prometheus  ██████████████░░░░░░ 70%',
               ''
             ]
           },
@@ -175,11 +177,11 @@ const Terminal = () => {
             type: 'file',
             content: [
               '',
-              '  🛠️  Tools & DevOps:',
-              '     ├── Git/GitHub ████████████████████ 95%',
-              '     ├── Docker     █████████████████░░░ 80%',
-              '     ├── Linux      ██████████████████░░ 85%',
-              '     └── AWS        ██████████████░░░░░░ 65%',
+              '  🛠️  ML Deployment Tools:',
+              '     ├── Git/GitHub  ████████████████████ 95%',
+              '     ├── Docker      ████████████████░░░░ 78%',
+              '     ├── HF Hub      ███████████████░░░░░ 78%',
+              '     └── Linux       █████████████████░░░ 85%',
               ''
             ]
           }
@@ -188,15 +190,18 @@ const Terminal = () => {
       'projects': {
         type: 'directory',
         children: {
-          'spark.md': {
+          'pneumoops.md': {
             type: 'file',
             content: [
               '',
-              '  🎬 SPARK - Video Streaming Platform',
+              '  🫁 PNEUMOOPS',
               '  ════════════════════════════════════',
-              '  Tech: Node.js, React, PostgreSQL, Redis',
-              '  Features: Adaptive streaming, real-time transcoding',
-              '  GitHub: github.com/Prakhar54-byte/spark',
+              '  What: MLOps system for 14-class chest X-ray classification',
+              '  Stack: PyTorch, ONNX Runtime, FastAPI, Gradio, Prometheus',
+              '  Challenge: Serve models with latency, drift, and observability signals',
+              '  Features: A/B routing, KS-test drift monitor, /metrics endpoint',
+              '  Learned: Deployment quality matters as much as model accuracy',
+              '  GitHub: github.com/Prakhar54-byte/PneumoOps',
               ''
             ]
           },
@@ -204,34 +209,44 @@ const Terminal = () => {
             type: 'file',
             content: [
               '',
-              '  🤝 CSR CONNECT',
+              '  🌍 CSR CONNECT',
               '  ════════════════════════════════════',
-              '  NGO-Corporate Matching Platform',
-              '  Tech: Django, PostgreSQL, React',
-              '  Status: Production (500+ users)',
+              '  What: AI platform mapping CSR reports to UN SDGs',
+              '  Stack: Django, DRF, PostgreSQL, Next.js, Gemini, pdfplumber, RAG',
+              '  Challenge: Convert messy PDFs into classified, searchable records',
+              '  Features: Gemini SDG classification, PDF extraction, admin/API filters',
+              '  Learned: LLM workflows need strong parsing and structured outputs',
+              '  GitHub: github.com/Prakhar54-byte/CSRconnect',
               ''
             ]
           },
-          'streamify.md': {
+          'house-price.md': {
             type: 'file',
             content: [
               '',
-              '  📺 STREAMIFY - Video Streaming Pipeline',
+              '  🏠 HOUSE PRICE PREDICTION ML',
               '  ════════════════════════════════════',
-              '  Tech: Node.js, FFmpeg, HLS Protocol',
-              '  Features: Adaptive bitrate streaming',
+              '  What: End-to-end Ames Housing regression pipeline',
+              '  Stack: XGBoost, sklearn, FastAPI, MLflow, ZenML, Docker',
+              '  Challenge: Move from notebook model to tracked API service',
+              '  Features: R2=0.9211, batch predictions, input validation',
+              '  Learned: Model selection should include accuracy, latency, and robustness',
+              '  GitHub: github.com/Prakhar54-byte/House_Price_Prediction_ML',
               ''
             ]
           },
-          'mlops.md': {
+          'spark-video.md': {
             type: 'file',
             content: [
               '',
-              '  🤖 MLOps PIPELINE',
+              '  🎬 SPARK VIDEO STREAMING',
               '  ════════════════════════════════════',
-              '  End-to-End ML System',
-              '  Tech: Python, Docker, FastAPI',
-              '  Features: Automated training, versioning',
+              '  What: Full-stack video streaming platform',
+              '  Stack: MERN, Next.js/React, FFmpeg, HLS.js, Docker',
+              '  Challenge: Secure upload, processing, storage, and playback',
+              '  Features: JWT auth, media API structure, HLS/FFmpeg roadmap',
+              '  Learned: Strong SDE foundations make AI products easier to ship',
+              '  GitHub: github.com/Prakhar54-byte/Video_Streaming',
               ''
             ]
           }
@@ -440,11 +455,11 @@ const Terminal = () => {
           '  💡 Or try "cat skills/languages.txt"',
           '',
           '  Quick Overview:',
-          '  ├── languages.txt   (C++, Python, JS, TS, Java)',
-          '  ├── frontend.txt    (React, Next.js, Tailwind)',
-          '  ├── backend.txt     (Node, Django, FastAPI)',
-          '  ├── databases.txt   (PostgreSQL, MongoDB, Redis)',
-          '  └── tools.txt       (Git, Docker, Linux, AWS)',
+          '  ├── languages.txt   (Python, PyTorch, sklearn, XGBoost)',
+          '  ├── frontend.txt    (React, Next.js, Gradio, Tailwind)',
+          '  ├── backend.txt     (FastAPI, Django/DRF, ONNX, REST)',
+          '  ├── databases.txt   (MLflow, W&B, PostgreSQL, Prometheus)',
+          '  └── tools.txt       (Git, Docker, HF Hub, Linux)',
           ''
         ]
       };
@@ -457,17 +472,17 @@ const Terminal = () => {
         output: [
           '',
           '  ╭──────────────────────────────────────────────────────────╮',
-          '  │                      MY PROJECTS                         │',
+          '  │               AI/ML + SDE CASE STUDIES                     │',
           '  ╰──────────────────────────────────────────────────────────╯',
           '',
           '  💡 Use "cd projects" then "ls" to see all projects!',
-          '  💡 Or try "cat projects/spark.md"',
+          '  💡 Or try "cat projects/pneumoops.md"',
           '',
-          '  Featured Projects:',
-          '  ├── spark.md        🎬 Video Streaming Platform',
-          '  ├── csr-connect.md  🤝 NGO-Corporate Matching',
-          '  ├── streamify.md    📺 Video Streaming Pipeline',
-          '  └── mlops.md        🤖 End-to-End ML System',
+          '  Featured Case Studies:',
+          '  ├── pneumoops.md    🫁 MLOps + drift monitoring',
+          '  ├── csr-connect.md  🌍 Gemini + RAG SDG classification',
+          '  ├── house-price.md  🏠 XGBoost + FastAPI + MLflow',
+          '  └── spark-video.md  🎬 Full-stack video streaming',
           ''
         ]
       };
@@ -576,7 +591,7 @@ const Terminal = () => {
     // Handle 'open' command
     if (mainCommand === 'open') {
       if (args[0] === 'resume.pdf') {
-        window.open('https://github.com/Prakhar54-byte', '_blank');
+        window.open(RESUME_URL, '_blank', 'noopener,noreferrer');
         return { command: cmd, output: ['  📄 Opening resume...'] };
       }
       return { command: cmd, output: [`  Cannot open: ${args[0] || 'no file specified'}`], isError: true };
@@ -713,7 +728,7 @@ const Terminal = () => {
         output: [
           '  :: Searching AUR for hire-prakhar...',
           '  aur/hire-prakhar 2.0-1 (+1337 0.00)',
-          '      Full Stack Developer | ML Enthusiast | Problem Solver',
+          '      AI/ML Engineer | Software Developer | MLOps Builder',
           '',
           '  :: Proceed with installation? [Y/n] Y',
           '  :: Resolving dependencies...',
