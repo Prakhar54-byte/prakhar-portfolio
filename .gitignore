@@ -31,3 +31,5 @@ dist-ssr
 .env
 analytics-api/
 cli-monitor/
+
+.antigravityignore
