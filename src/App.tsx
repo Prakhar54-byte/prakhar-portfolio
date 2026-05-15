@@ -1,19 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Terminal from './components/Terminal';
-import Hero3D from './components/Hero3D';
-import Navbar from './components/Navbar';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Experience from './components/Experience';
-import Contact from './components/Contact';
 import MatrixRain from './components/MatrixRain';
 import BootScreen from './components/BootScreen';
-import VisitorCounter from './components/VisitorCounter';
-import Dashboard from './components/Dashboard';
+import Navbar from './components/Navbar';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+
+// Lazy load components for performance
+const Hero3D = lazy(() => import('./components/Hero3D'));
+const Terminal = lazy(() => import('./components/Terminal'));
+const About = lazy(() => import('./components/About'));
+const Skills = lazy(() => import('./components/Skills'));
+const Projects = lazy(() => import('./components/Projects'));
+const Experience = lazy(() => import('./components/Experience'));
+const Contact = lazy(() => import('./components/Contact'));
+const VisitorCounter = lazy(() => import('./components/VisitorCounter'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+
+// Loading fallback component
+const SectionLoader = () => (
+  <div className="flex items-center justify-center py-20 text-green-400 font-mono animate-pulse">
+    <span>[ LOADING MODULE... ]</span>
+  </div>
+);
 
 function App() {
   const [booting, setBooting] = useState(true);
@@ -30,7 +39,11 @@ function App() {
   }, [booting]);
 
   if (window.location.pathname === '/dashboard') {
-    return <Dashboard />;
+    return (
+      <Suspense fallback={<SectionLoader />}>
+        <Dashboard />
+      </Suspense>
+    );
   }
 
   return (
@@ -52,13 +65,15 @@ function App() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <Hero3D />
-          <Terminal />
-          <About />
-          <Skills />
-          <Projects />
-          <Experience />
-          <Contact />
+          <Suspense fallback={<SectionLoader />}>
+            <Hero3D />
+            <Terminal />
+            <About />
+            <Skills />
+            <Projects />
+            <Experience />
+            <Contact />
+          </Suspense>
         </motion.main>
       </AnimatePresence>
 
@@ -70,7 +85,9 @@ function App() {
         <p className="text-gray-600 text-xs mt-2">
           © 2026 | IIT Jodhpur
         </p>
-        <VisitorCounter />
+        <Suspense fallback={null}>
+          <VisitorCounter />
+        </Suspense>
       </footer>
       <Analytics />
       <SpeedInsights />

@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Float } from '@react-three/drei';
+import { OrbitControls, Float, Preload } from '@react-three/drei';
 import { motion } from 'framer-motion';
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, memo } from 'react';
 import { RESUME_URL } from '../config/resume';
 
 // Typing effect hook
@@ -45,16 +45,16 @@ const FloatingCube = ({ position, color, size = 1 }: { position: [number, number
   );
 };
 
-const FloatingSphere = ({ position, color, size = 0.5 }: { position: [number, number, number]; color: string; size?: number }) => {
+const FloatingSphere = memo(({ position, color, size = 0.5 }: { position: [number, number, number]; color: string; size?: number }) => {
   return (
     <Float speed={1.5} rotationIntensity={1} floatIntensity={3}>
       <mesh position={position}>
-        <sphereGeometry args={[size, 16, 16]} />
+        <sphereGeometry args={[size, 12, 12]} />
         <meshStandardMaterial color={color} wireframe opacity={0.6} transparent />
       </mesh>
     </Float>
   );
-};
+});
 
 const Scene = () => {
   return (
@@ -76,8 +76,8 @@ const Scene = () => {
 };
 
 const Hero3D = () => {
-  const { displayedText: whoamiText, isComplete: whoamiComplete } = useTypingEffect('whoami', 100, 500);
-  const { displayedText: nameText } = useTypingEffect('Prakhar Chauhan', 80, 1500);
+  const { displayedText: whoamiText, isComplete: whoamiComplete } = useTypingEffect('whoami', 80, 200);
+  const { displayedText: nameText } = useTypingEffect('Prakhar Chauhan', 60, 1000);
   const titles = ['AI/ML Engineer', 'Software Developer', 'MLOps Builder', 'Computer Vision Developer'];
   const [titleIndex, setTitleIndex] = useState(0);
   const [currentTitle, setCurrentTitle] = useState('');
@@ -109,9 +109,10 @@ const Hero3D = () => {
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-16">
       {/* 3D Canvas Background */}
       <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 0, 8], fov: 60 }}>
+        <Canvas camera={{ position: [0, 0, 8], fov: 60 }} dpr={[1, 2]}>
           <Suspense fallback={null}>
             <Scene />
+            <Preload all />
           </Suspense>
         </Canvas>
       </div>
